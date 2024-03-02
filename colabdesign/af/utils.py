@@ -95,7 +95,7 @@ class _af_utils:
   #-------------------------------------
   # plotting functions
   #-------------------------------------
-  def animate(self, s=0, e=None, dpi=100, get_best=True, traj=None, aux=None, color_by="plddt"):
+  def animate(self, s=0, e=None, dpi=100, get_best=True, traj=None, aux=None, color_by="plddt", interval=60):
     '''
     animate the trajectory
     - use [s]tart and [e]nd to define range to be animated
@@ -116,7 +116,7 @@ class _af_utils:
 
     align_xyz = self.protocol == "hallucination"
     return make_animation(**sub_traj, pos_ref=pos_ref, length=self._lengths,
-                          color_by=color_by, align_xyz=align_xyz, dpi=dpi) 
+                          color_by=color_by, interval=interval, align_xyz=align_xyz, dpi=dpi) 
 
   def plot_pdb(self, show_sidechains=False, show_mainchains=False,
                color="pLDDT", color_HP=False, size=(800,480), animate=False,

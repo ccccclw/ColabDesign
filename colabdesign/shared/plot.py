@@ -77,7 +77,7 @@ def show_pdb(pdb_str, show_sidechains=False, show_mainchains=False,
   if animate: view.animate()
   return view
 
-def plot_pseudo_3D(xyz, c=None, ax=None, chainbreak=5, Ls=None,
+def plot_pseudo_3D(xyz, iter=None, c=None, ax=None, chainbreak=5, Ls=None,
                    cmap="gist_rainbow", line_w=2.0,
                    cmin=None, cmax=None, zmin=None, zmax=None,
                    shadow=0.95):
@@ -169,7 +169,8 @@ def plot_pseudo_3D(xyz, c=None, ax=None, chainbreak=5, Ls=None,
     ax.set_ylim(xy_min,xy_max)
 
   ax.set_aspect('equal')
-    
+  ax.text(ax.get_xlim()[0]+(ax.get_xlim()[1]-ax.get_xlim()[0])*0.85,\
+          ax.get_ylim()[0]+(ax.get_ylim()[1]-ax.get_ylim()[0])*0.95,f"iter {iter}")
   # determine linewidths
   width = fig.bbox_inches.width * ax.get_position().width
   linewidths = line_w * 72 * width / np.diff(ax.get_xlim())
@@ -300,13 +301,13 @@ def make_animation(seq, con=None, xyz=None, plddt=None, pae=None,
     if xyz is not None:
       flags = dict(ax=ax1, line_w=line_w, zmin=z_min, zmax=z_max)
       if color_by == "plddt" and plddt is not None:
-        ims[-1].append(plot_pseudo_3D(pos[k], c=plddt[k], Ls=Ls, cmin=0.5, cmax=0.9, **flags))
+        ims[-1].append(plot_pseudo_3D(pos[k], iter=k, c=plddt[k], Ls=Ls, cmin=0.5, cmax=0.9, **flags))
       elif color_by == "chain":
         c = np.concatenate([[n]*L for n,L in enumerate(length)])
-        ims[-1].append(plot_pseudo_3D(pos[k], c=c,  Ls=Ls, cmap=pymol_cmap, cmin=0, cmax=39, **flags))
+        ims[-1].append(plot_pseudo_3D(pos[k], iter=k, c=c,  Ls=Ls, cmap=pymol_cmap, cmin=0, cmax=39, **flags))
       else:
         L = pos[k].shape[0]
-        ims[-1].append(plot_pseudo_3D(pos[k], c=np.arange(L)[::-1],  Ls=Ls, cmin=0, cmax=L, **flags))  
+        ims[-1].append(plot_pseudo_3D(pos[k], iter=k, c=np.arange(L)[::-1],  Ls=Ls, cmin=0, cmax=L, **flags))  
     else:
       L = con[k].shape[0]
       ims[-1].append(ax1.imshow(con[k], animated=True, cmap="Greys",vmin=0, vmax=1, extent=(0, L, L, 0)))
